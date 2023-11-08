@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:shopping_list/widgets/left_drawer.dart';
+import 'package:shopping_list/widgets/shop_card.dart';
+import 'package:shopping_list/screens/shoplist_form.dart';
 
 class MyHomePage extends StatelessWidget {
   MyHomePage({Key? key}) : super(key: key);
@@ -15,8 +18,12 @@ class MyHomePage extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Shopping List'),
-          // backgroundColor: Colors.deepOrange,
+          backgroundColor: Colors.indigo,
+          foregroundColor: Colors.white,
         ),
+
+        drawer: const LeftDrawer(),
+
         body: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -58,13 +65,6 @@ class MyHomePage extends StatelessWidget {
 // always marked "final".
 }
 
-class ShopItem {
-  final String name;
-  final IconData icon;
-
-  ShopItem(this.name, this.icon);
-}
-
 class ShopCard extends StatelessWidget {
   final ShopItem item;
 
@@ -81,6 +81,15 @@ class ShopCard extends StatelessWidget {
                 ..hideCurrentSnackBar()
                 ..showSnackBar(SnackBar(
                     content: Text("Kamu telah menekan tombol ${item.name}")));
+              // Navigate ke route yang sesuai (tergantung jenis tombol)
+              if (item.name == "Tambah Produk") {
+                // TODO: Gunakan Navigator.push untuk melakukan navigasi ke MaterialPageRoute yang mencakup ShopFormPage.
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ShopFormPage()
+                  ),
+                );
+              }
             },
             child: Container(
                 padding: const EdgeInsets.all(8),
