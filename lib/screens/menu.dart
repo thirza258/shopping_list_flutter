@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 import 'package:shopping_list/widgets/left_drawer.dart';
 import 'package:shopping_list/widgets/shop_card.dart';
 import 'package:shopping_list/screens/shoplist_form.dart';
+import 'package:shopping_list/screens/login.dart';
+import 'package:shopping_list/screens/list_product.dart';
 
 class MyHomePage extends StatelessWidget {
   MyHomePage({Key? key}) : super(key: key);
@@ -72,11 +76,12 @@ class ShopCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
     // TODO: implement build
     return Material(
         color: Colors.indigo,
         child: InkWell(
-            onTap: () {
+            onTap: () async {
               ScaffoldMessenger.of(context)
                 ..hideCurrentSnackBar()
                 ..showSnackBar(SnackBar(
@@ -90,6 +95,36 @@ class ShopCard extends StatelessWidget {
                   ),
                 );
               }
+              else if (item.name == "Lihat Produk") {
+                Navigator.push(context,
+                    MaterialPageRoute(
+                        builder: (context) => const ProductPage()));
+              }
+// statement if sebelumnya
+// tambahkan else if baru seperti di bawah ini
+              else if (item.name == "Logout") {
+               final response = await request.logout(
+                // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
+                //   "http://127.0.0.1:8000/auth/logout/"
+                 "http://thirza-ahmad-tutorial.pbp.cs.ui.ac.id/auth/logout/"
+               );
+                  String message = response["message"];
+                if (response['status']) {
+                  String uname = response["username"];
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text("$message Sampai jumpa, $uname."),
+                    ));
+                    Navigator.pushReplacement(
+                           context,
+                            MaterialPageRoute(builder: (context) => const LoginPage()),
+                       );
+                } else {
+                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text("$message"),
+                ) );
+              }
+              }
+
             },
             child: Container(
                 padding: const EdgeInsets.all(8),
